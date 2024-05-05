@@ -27,7 +27,8 @@ public class CargarDatos {
     
     public static void main(String[] args) {
         File file = new File("/home/carlosl/NetBeansProjects/TravelMapGT/src/main/java/Cargardatos/input_example.csv");
-        leerCSVDatos(file);
+        List<Grafo> grafos = leerCSVDatos(file);
+        Graficar.Graficar.generarGraficosListado(grafos);
     }
     
 

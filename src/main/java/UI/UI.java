@@ -265,6 +265,170 @@ public class UI extends javax.swing.JFrame {
         */
     }//GEN-LAST:event_jButton2ActionPerformed
 
+  
+    
+    private void jTabbedPane1ComponentAdded(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_jTabbedPane1ComponentAdded
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTabbedPane1ComponentAdded
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+     
+      
+        
+       
+       
+    }//GEN-LAST:event_formWindowActivated
+
+    private void jComboBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox3ActionPerformed
+        String selectedValue = (String) jComboBox3.getSelectedItem();
+        System.out.println("Valor seleccionado: " + selectedValue);
+    }//GEN-LAST:event_jComboBox3ActionPerformed
+
+    private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
+        String selectedValue = (String) jComboBox2.getSelectedItem();
+        System.out.println("Valor seleccionado: " + selectedValue);
+        
+    }//GEN-LAST:event_jComboBox2ActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { }));
+        String selectedValue = (String) jComboBox1.getSelectedItem();
+        System.out.println("Valor seleccionado: " + selectedValue);
+        enlistarDestinos(selectedValue);
+        List<Grafo> grafos =  new ArrayList<>();
+        for (Grafo grafo : lista) {
+            if (grafo.getValor().equals(selectedValue)) {
+                graficarNodos(grafos, grafo);
+                Graficar.Graficar.generarGraficosListado(grafos);
+               
+            }
+        }
+        
+
+
+    }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    public void graficarNodos(List<Grafo> grafos,Grafo grafo){
+        for (NodoGrafo nodo : grafo.getNodos()) {
+            for (Grafo grafox : lista) {
+                if (nodo.getDestino().equals(grafox.getValor()) || nodo.getOrigen().equals(grafox.getValor()) ) {
+                    System.out.println("Grafo agregado " + grafox.getValor());
+                    grafos.add(grafox);
+                    
+                }
+            }
+        }
+        
+        
+        List<Grafo> gradoCopia =new ArrayList<>(grafos);
+        gradoCopia.remove(0);
+        for (Grafo grafo1 : gradoCopia) {
+            for (NodoGrafo nodo : grafo1.getNodos()) {
+              for (Grafo grafox : lista) {
+                    if (nodo.getDestino().equals(grafox.getValor()) || nodo.getOrigen().equals(grafox.getValor())) {
+                        System.out.println("Grafo agregado " + grafox.getValor());
+                        grafos.add(grafox);
+                    }
+              }
+            }
+        }
+        
+        for(Grafo grafop:grafos){
+            System.out.println("grafos" + grafop.getValor());
+        }
+    }
+    
+    public void enlistarDestinos(String selectedValue ){
+        boolean agregar = true;
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { }));
+        List<Grafo> grafos =  new ArrayList<>();
+        for (Grafo grafo : lista) {
+            if (grafo.getValor().equals(selectedValue)) {
+                 graficarNodos(grafos, grafo);
+                 for (Grafo grafo1 : grafos) {
+                    for (NodoGrafo nodo : grafo1.getNodos()) {
+                    if (nodo.getNodo() == null || nodo.getNodo().getNodos().isEmpty()) {
+                        for (int i = 0; i < jComboBox2.getItemCount(); i++) {
+                            agregar = !nodo.getDestino().equals(jComboBox2.getItemAt(i));
+                            if (!agregar) {
+                                i= jComboBox2.getItemCount();
+                            }
+                        }
+                       
+                        if (agregar) {
+                            jComboBox2.addItem(nodo.getDestino()); 
+                        }
+                          
+                    }else if (nodo.getNodo() !=null) {
+                        for (int i = 0; i < jComboBox2.getItemCount(); i++) {
+                            agregar = !nodo.getDestino().equals(jComboBox2.getItemAt(i));
+                            if (!agregar) {
+                                i= jComboBox2.getItemCount();
+                            }
+                        }
+                       
+                        if (agregar) {
+                            jComboBox2.addItem(nodo.getDestino()); 
+                        }
+                        siguienteNodo(nodo);
+                    }
+                }
+                }
+                
+            }
+        }
+    }
+    
+    public void siguienteNodo(NodoGrafo nodo){
+        boolean agregar = true;
+          
+        if (nodo.getNodo() != null) {
+            for (NodoGrafo nodoGrafo : nodo.getNodo().getNodos()) {
+                System.out.println("Nodo siguente : " + nodoGrafo.getNodo());
+                System.out.println("Nodo Actual Origen : " + nodoGrafo.getOrigen());
+                System.out.println("Nodo Actual Destino : " + nodoGrafo.getDestino());
+                System.out.println("Tamanio de listado  : " + jComboBox2.getItemCount());
+                for (int i = 0; i < jComboBox2.getItemCount(); i++) {
+                    agregar = nodoGrafo.getDestino().equals(jComboBox2.getItemAt(i));
+                    if (agregar) {
+                        i= jComboBox2.getItemCount();
+                    }
+                    
+                }
+                       
+                System.out.println(agregar);
+                if (!agregar) {
+                    jComboBox2.addItem(nodoGrafo.getDestino()); 
+                    }
+                if (nodoGrafo.getNodo() != null) {
+                    siguienteNodo(nodoGrafo);
+                }
+            }
+        }
+       
+    }
+    
+    public NodoGrafo nodoFinal(NodoGrafo nodo){
+          
+        System.out.println("nodografo : " + nodo.getNodo().getNodos() );
+        if (nodo.getNodo().getNodos() != null) {
+            for (NodoGrafo nodoGrafo : nodo.getNodo().getNodos()) {
+                System.out.println("Nodo : " + nodoGrafo.getNodo());
+                
+                if (nodoGrafo.getNodo() == null) {
+                    return nodoGrafo;
+        
+                }
+            }
+        }
+        
+        return null;
+    }
+    
      public static void enlistar(List<List<NodoGrafo>> listadoDeGrafos,  List<NodoGrafo> nodoGrafos , Grafo grafo, String origen, String destino) {        
         if (grafo != null) {
             for (NodoGrafo nodoGrafo : grafo.getNodos()) {
@@ -369,143 +533,6 @@ public class UI extends javax.swing.JFrame {
         
     }
     
-    private void jTabbedPane1ComponentAdded(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_jTabbedPane1ComponentAdded
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTabbedPane1ComponentAdded
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
-
-    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
-     
-      
-        
-       
-       
-    }//GEN-LAST:event_formWindowActivated
-
-    private void jComboBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox3ActionPerformed
-        String selectedValue = (String) jComboBox3.getSelectedItem();
-        System.out.println("Valor seleccionado: " + selectedValue);
-    }//GEN-LAST:event_jComboBox3ActionPerformed
-
-    private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
-        String selectedValue = (String) jComboBox2.getSelectedItem();
-        System.out.println("Valor seleccionado: " + selectedValue);
-        
-    }//GEN-LAST:event_jComboBox2ActionPerformed
-
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { }));
-        String selectedValue = (String) jComboBox1.getSelectedItem();
-        System.out.println("Valor seleccionado: " + selectedValue);
-        enlistarDestinos(selectedValue);
-        List<Grafo> grafos =  new ArrayList<>();
-        for (Grafo grafo : lista) {
-            if (grafo.getValor().equals(selectedValue)) {
-                graficarNodos(grafos, grafo);
-                Graficar.Graficar.generarGraficosListado(grafos);
-               
-            }
-        }
-        
-
-
-    }//GEN-LAST:event_jComboBox1ActionPerformed
-
-    public void graficarNodos(List<Grafo> grafos,Grafo grafo){
-        for (NodoGrafo nodo : grafo.getNodos()) {
-            for (Grafo grafox : lista) {
-                if (nodo.getDestino().equals(grafox.getValor()) || nodo.getOrigen().equals(grafox.getValor())) {
-                    grafos.add(grafox);
-                }  
-            }
-        }
-    }
-    
-    public void enlistarDestinos(String selectedValue ){
-        boolean agregar = true;
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { }));
-        for (Grafo grafo : lista) {
-            if (grafo.getValor().equals(selectedValue)) {
-                for (NodoGrafo nodo : grafo.getNodos()) {
-                    if (nodo.getNodo() == null) {
-                        for (int i = 0; i < jComboBox2.getItemCount(); i++) {
-                            agregar = !nodo.getDestino().equals(jComboBox2.getItemAt(i));
-                            if (!agregar) {
-                                i= jComboBox2.getItemCount();
-                            }
-                        }
-                       
-                        if (agregar) {
-                            jComboBox2.addItem(nodo.getDestino()); 
-                        }
-                          
-                    }else if (nodo.getNodo() !=null) {
-                        for (int i = 0; i < jComboBox2.getItemCount(); i++) {
-                            agregar = !nodo.getDestino().equals(jComboBox2.getItemAt(i));
-                            if (!agregar) {
-                                i= jComboBox2.getItemCount();
-                            }
-                        }
-                       
-                        if (agregar) {
-                            jComboBox2.addItem(nodo.getDestino()); 
-                        }
-                        siguienteNodo(nodo);
-                    }
-                }
-            }
-        }
-    }
-    
-    public void siguienteNodo(NodoGrafo nodo){
-        boolean agregar = true;
-          
-        if (nodo.getNodo() != null) {
-            for (NodoGrafo nodoGrafo : nodo.getNodo().getNodos()) {
-                System.out.println("Nodo siguente : " + nodoGrafo.getNodo());
-                System.out.println("Nodo Actual Origen : " + nodoGrafo.getOrigen());
-                System.out.println("Nodo Actual Destino : " + nodoGrafo.getDestino());
-                System.out.println("Tamanio de listado  : " + jComboBox2.getItemCount());
-                for (int i = 0; i < jComboBox2.getItemCount(); i++) {
-                    agregar = nodoGrafo.getDestino().equals(jComboBox2.getItemAt(i));
-                    if (agregar) {
-                        i= jComboBox2.getItemCount();
-                    }
-                    
-                }
-                       
-                System.out.println(agregar);
-                if (!agregar) {
-                    jComboBox2.addItem(nodoGrafo.getDestino()); 
-                    }
-                if (nodoGrafo.getNodo() != null) {
-                    siguienteNodo(nodoGrafo);
-                }
-            }
-        }
-       
-    }
-    
-    public NodoGrafo nodoFinal(NodoGrafo nodo){
-          
-        System.out.println("nodografo : " + nodo.getNodo().getNodos() );
-        if (nodo.getNodo().getNodos() != null) {
-            for (NodoGrafo nodoGrafo : nodo.getNodo().getNodos()) {
-                System.out.println("Nodo : " + nodoGrafo.getNodo());
-                
-                if (nodoGrafo.getNodo() == null) {
-                    return nodoGrafo;
-        
-                }
-            }
-        }
-        
-        return null;
-    }
-    
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
         System.out.println("Seleccionando Boton carga");
         String selectedValue2= (String) jComboBox2.getSelectedItem();
@@ -570,8 +597,11 @@ public class UI extends javax.swing.JFrame {
         }
          jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { }));
         for (Grafo grafo : lista) {
-            
             jComboBox1.addItem(grafo.getValor());
+            for(NodoGrafo nodo : grafo.getNodos()){
+                jComboBox1.addItem(nodo.getDestino());
+            }
+            
          }
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
