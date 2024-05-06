@@ -10,15 +10,15 @@ import guru.nidi.graphviz.attribute.Color;
 import guru.nidi.graphviz.attribute.Font;
 import guru.nidi.graphviz.attribute.Rank;
 import static guru.nidi.graphviz.attribute.Rank.RankDir.LEFT_TO_RIGHT;
-import guru.nidi.graphviz.engine.Format;
-import guru.nidi.graphviz.engine.Graphviz;
-import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
-import guru.nidi.graphviz.model.Graph;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import guru.nidi.graphviz.engine.Format;
+import guru.nidi.graphviz.engine.Graphviz;
+import static guru.nidi.graphviz.model.Factory.graph;
+import guru.nidi.graphviz.model.Graph;
 
 /**
  *
@@ -26,10 +26,8 @@ import java.util.List;
  */
 public class Graficar {
 
-    public Graficar() {
-       
-    }
     
+   
     public static void generarGraficos(Grafo grafo) {
        List<Graph> listadoDeGRafos= new ArrayList<>();
        graficar(listadoDeGRafos,grafo,grafo.getValor());
@@ -67,7 +65,7 @@ public class Graficar {
         }
         
         try {
-            Graphviz.fromGraph(finalGraph).width(400).render(Format.PNG).toFile(new File("src/main/java/Graficar/graficaGenerada.png"));
+            Graphviz.fromGraph(finalGraph).width(1000).render(Format.PNG).toFile(new File("src/main/java/Graficar/graficaGenerada.png"));
             System.out.println("Grafos renderizados y unidos correctamente.");
         } catch (IOException e) {
             System.out.println("Error al renderizar y unir los grafos: " + e.getMessage());
@@ -102,5 +100,14 @@ public class Graficar {
                         node(node1).with(Color.BLACK).link(node(node2))
                 );
     }
+    
+
+
+   
+
+    public static void main(String[] args) {
+        // Ejemplo de uso
+    }
+
     
 }

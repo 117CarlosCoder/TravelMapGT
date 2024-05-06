@@ -4,6 +4,7 @@
  */
 package Grafo;
 
+import guru.nidi.graphviz.attribute.Color;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
@@ -22,17 +23,19 @@ public class NodoGrafo {
     private DateTimeFormatter formatter;
     private LocalTime horaInicial;
     private LocalTime horaFinal;
-    private String Color;
+    private Color Color;
     private double puntuacio;
     private float probabilidadTrafico;
     private Grafo nodo;
 
     public NodoGrafo() {
+        this.Color = Color.BLACK;
         this.formatter = DateTimeFormatter.ofPattern("HH");
         
     }
 
     public NodoGrafo(String Origen, String Destino, double tiempo_promedio_vehiculo, double tiempo_aproximado_a_pie, double gasto_gasolna, double gasto_fisico, double distancia, Grafo nodo) {
+        this.Color = Color.BLACK;
         this.formatter = DateTimeFormatter.ofPattern("HH");
         this.Origen = Origen;
         this.Destino = Destino;
@@ -149,11 +152,11 @@ public class NodoGrafo {
     }
 
     
-    public String getColor() {
+    public Color getColor() {
         return Color;
     }
 
-    public void setColor(String Color) {
+    public void setColor(Color Color) {
         this.Color = Color;
     }
 
@@ -170,7 +173,9 @@ public class NodoGrafo {
         return "NodoGrafo{" + "Origen=" + Origen + ", Destino=" + Destino + ", tiempo_promedio_vehiculo=" + tiempo_promedio_vehiculo + ", tiempo_aproximado_a_pie=" + tiempo_aproximado_a_pie + ", gasto_gasolna=" + gasto_gasolna + ", gasto_fisico=" + gasto_fisico + ", distancia=" + distancia + ", formatter=" + formatter + ", horaInicial=" + horaInicial + ", horaFinal=" + horaFinal + ", Color=" + Color + ", puntuacio=" + puntuacio + ", probabilidadTrafico=" + probabilidadTrafico + ", nodo=" + nodo + '}';
     }
 
-   
+    public String destinos() {
+        return " " + Destino  + " ";
+    }
     
     
 }

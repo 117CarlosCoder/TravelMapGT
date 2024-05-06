@@ -1,13 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package NodoArbolB;
 
 import Grafo.NodoGrafo;
 import Key.Key;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
@@ -15,30 +10,36 @@ import java.util.List;
  */
 public class NodoArbolB {
 
-    private int n; //numero de claves almacenadas en el nodo
-    private boolean leaf; //Si el nodo es hoja (nodo hoja=true; nodo interno=false)
+    private int clavesEnNodo; 
+    private boolean hoja; 
     private Key keys[];
-    private int key[];  //almacena las claves en el nodo
-    private NodoArbolB child[]; //arreglo con referencias a los hijos
+    private int key[];  
+    private NodoArbolB hijos[]; 
 
-    //Constructores
+    
     public NodoArbolB(int t) {
-        n = 0;
-        leaf = true;
+        clavesEnNodo = 0;
+        hoja = true;
         key = new int[((2 * t) - 1)];
         keys = new Key[((2 * t) - 1)];
-        child = new NodoArbolB[(2 * t)];
+        hijos = new NodoArbolB[(2 * t)];
     }
 
     public void imprimir() {
         System.out.print("[");
-        for (int i = 0; i < n; i++) {
-            if (i < n - 1) {
+        for (int i = 0; i < clavesEnNodo; i++) {
+            if (i < clavesEnNodo - 1) {
                 System.out.print(key[i] + " ");
                 for (Key key1 : keys) {
-                    for (NodoGrafo nodoGrafo : key1.getNodosgrafo()) {
-                        System.out.print(nodoGrafo.getDestino( )+ " "); 
+                    if (key1 != null && key1.getNodosgrafo() != null) {
+                        for (NodoGrafo nodoGrafo : key1.getNodosgrafo()) {
+                        if (nodoGrafo != null) {
+                            System.out.print(nodoGrafo.getDestino( )+ " "); 
+                        }
+                        
                     }
+                    }
+                    
                    
                 }
                 System.out.print(" | ");  
@@ -53,7 +54,7 @@ public class NodoArbolB {
     }
 
     public int find(int k) {
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < clavesEnNodo; i++) {
             if (key[i] == k) {
                 return i;
             }
@@ -64,20 +65,20 @@ public class NodoArbolB {
         return -1;
     }
 
-    public int getN() {
-        return n;
+    public int getClavesEnNodo() {
+        return clavesEnNodo;
     }
 
-    public void setN(int n) {
-        this.n = n;
+    public void setClavesEnNodo(int n) {
+        this.clavesEnNodo = n;
     }
 
-    public boolean isLeaf() {
-        return leaf;
+    public boolean ishoja() {
+        return hoja;
     }
 
-    public void setLeaf(boolean leaf) {
-        this.leaf = leaf;
+    public void sethoja(boolean hoja) {
+        this.hoja = hoja;
     }
 
     public int[] getKey() {
@@ -88,12 +89,12 @@ public class NodoArbolB {
         this.key = key;
     }
 
-    public NodoArbolB[] getChild() {
-        return child;
+    public NodoArbolB[] getHijos() {
+        return hijos;
     }
 
-    public void setChild(NodoArbolB[] child) {
-        this.child = child;
+    public void setHijos(NodoArbolB[] child) {
+        this.hijos = child;
     }
 
     public Key[] getKeys() {

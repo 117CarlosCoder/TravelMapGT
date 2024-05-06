@@ -6,20 +6,17 @@ package UI;
 
 import ArbolB.ArbolB;
 import Calculo.Calculo;
-import static Graficar.Graficar.createGraph;
 import Grafo.Grafo;
 import Grafo.NodoGrafo;
-import Listado.Listado;
-import NodoArbolB.NodoArbolB;
-import guru.nidi.graphviz.model.Graph;
 import java.awt.event.ItemEvent;
 import java.io.File;
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import Cargardatos.CargarDatos;
+import java.awt.Image;
+import java.awt.event.MouseEvent;
 /**
  *
  * @author carlosl
@@ -27,6 +24,7 @@ import Cargardatos.CargarDatos;
 public class UI extends javax.swing.JFrame {
 
     private List<Grafo> lista;
+    private static List<Grafo> listaRecortada;
     /**
      * Creates new form UI
      */
@@ -68,6 +66,12 @@ public class UI extends javax.swing.JFrame {
             public void windowActivated(java.awt.event.WindowEvent evt) {
                 formWindowActivated(evt);
             }
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
         });
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {}));
@@ -88,6 +92,11 @@ public class UI extends javax.swing.JFrame {
             }
         });
 
+        jScrollPane1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jScrollPane1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jLabel7);
 
         jTabbedPane1.addTab("Grafos", jScrollPane1);
@@ -238,31 +247,6 @@ public class UI extends javax.swing.JFrame {
         jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { }));            
         jComboBox4.setEnabled(true);
         jButton3.setEnabled(true);
-        /* String selectedValue = (String) jComboBox2.getSelectedItem();
-        //ArbolB arbolB = new ArbolB(0, new ArrayList<>() );
-        for (Grafo grafo : lista) {
-            if (grafo.getValor().equals(selectedValue)) {
-                double total = 0;
-                List<NodoGrafo> listadoGrafos = new ArrayList<>();
-                enlistar(listadoGrafos, grafo, selectedValue);
-               
-                for (NodoGrafo grafos : listadoGrafos) {
-                    total = Calculo.calcularRapidezCaminando(grafos.getDistancia(), grafos.getTiempo_aproximado_a_pie());
-//                    total = Calculo.calcularRapidezVehiculo(grafos.getDistancia(), grafos.getTiempo_promedio_vehiculo(), grafos.getProbabilidad_trafico());               
-            //         arbolB.setNodoRaizValor(grafos);
-                }
-                
-                System.out.println("Lista total ");
-                for (NodoGrafo listadoGrafo : listadoGrafos) {
-                     System.out.println("Lista total " + listadoGrafo.getDestino());
-                }
-               
-               // arbolB.setId(total);
-               
-                
-            }
-        }
-        */
     }//GEN-LAST:event_jButton2ActionPerformed
 
   
@@ -308,6 +292,9 @@ public class UI extends javax.swing.JFrame {
             }
         }
         
+        listaRecortada =  new ArrayList<Grafo>(grafos);
+        
+        
 
 
     }//GEN-LAST:event_jComboBox1ActionPerformed
@@ -316,8 +303,10 @@ public class UI extends javax.swing.JFrame {
         for (NodoGrafo nodo : grafo.getNodos()) {
             for (Grafo grafox : lista) {
                 if (nodo.getDestino().equals(grafox.getValor()) || nodo.getOrigen().equals(grafox.getValor()) ) {
-                    System.out.println("Grafo agregado " + grafox.getValor());
-                    grafos.add(grafox);
+                    if(!grafos.contains(grafox)){
+                        System.out.println("Grafo agregado " + grafox.getValor());
+                        grafos.add(grafox);
+                    }
                     
                 }
             }
@@ -330,8 +319,10 @@ public class UI extends javax.swing.JFrame {
             for (NodoGrafo nodo : grafo1.getNodos()) {
               for (Grafo grafox : lista) {
                     if (nodo.getDestino().equals(grafox.getValor()) || nodo.getOrigen().equals(grafox.getValor())) {
-                        System.out.println("Grafo agregado " + grafox.getValor());
-                        grafos.add(grafox);
+                        if(!grafos.contains(grafox)){
+                            System.out.println("Grafo agregado " + grafox.getValor());
+                            grafos.add(grafox);
+                        }
                     }
               }
             }
@@ -429,25 +420,16 @@ public class UI extends javax.swing.JFrame {
         return null;
     }
     
-     public static void enlistar(List<List<NodoGrafo>> listadoDeGrafos,  List<NodoGrafo> nodoGrafos , Grafo grafo, String origen, String destino) {        
-        if (grafo != null) {
+     public static List<NodoGrafo> enlistar(List<List<NodoGrafo>> listadoDeGrafos, Grafo grafo, String origen, String destino) {        
+            List<NodoGrafo> nodoGrafos = new ArrayList<>();
+            boolean valor ;
+         if (grafo != null) {
             for (NodoGrafo nodoGrafo : grafo.getNodos()) {
+                valor = true;
                 
                 System.out.println("Listado origen " + nodoGrafo.getOrigen());
                 System.out.println("Listado destino " + nodoGrafo.getDestino());
-                /*
-                System.out.println("Nodo : " + nodoGrafo.getDestino());
-                if (nodoGrafo.getDestino().equals(destino)) {
-                    listadoDeGrafos.add(nodoGrafo);
-                    System.out.println("Nodo agregado " + nodoGrafo.getDestino());
 
-                    //enlistar(listadoDeGrafos, nodoGrafo.getNodo(), nodoGrafo.getNodo().getValor());
-                } 
-                else{
-                    if(nodoGrafo.getNodo() != null){
-                        enlistar(listadoDeGrafos, nodoGrafo.getNodo(), destino);
-                    }
-                }*/
                 System.out.println("Destino Buscado : "+destino);
                 System.out.println("Origen : "+origen);
                 System.out.println("Destino : "+ destino);
@@ -457,14 +439,22 @@ public class UI extends javax.swing.JFrame {
                             System.out.println("0>>>>>>>>>>>>Noodos grafo : " + nodoGrafo1);
                         }
                     if (nodoGrafo.getOrigen().equals(origen) && nodoGrafo.getDestino().equals(destino)) {
-                        nodoGrafos.add(nodoGrafo);
-                        listadoDeGrafos.add(nodoGrafos);
+                        if (!nodoGrafos.contains(nodoGrafo)) {
+                            valor = false;
+                           
+                        }
+                        if (valor) {
+                             nodoGrafos.add(nodoGrafo);
+                        }
+                        if(!listadoDeGrafos.contains(nodoGrafos)){
+                            listadoDeGrafos.add(nodoGrafos);
+                        }
                         for (NodoGrafo nodoGrafo1 : nodoGrafos) {
                             System.out.println("+++++++++++++++Noodos grafo : " + nodoGrafo1);
                         }for (List<NodoGrafo> nodoGrafo1 : listadoDeGrafos) {
                             System.out.println("1>>>>>>>>>>>>>>>Noodos grafo : " + nodoGrafo1);
                         }
-                        return;
+                        
                     }
                     else if(nodoGrafo.getDestino().equals(destino)){
                         for (List<NodoGrafo> nodoGrafo1 : listadoDeGrafos) {
@@ -491,7 +481,7 @@ public class UI extends javax.swing.JFrame {
                         }
                     }
                 }
-                else if((!nodoGrafo.getNodo().getNodos().isEmpty()) && nodoGrafo.getOrigen().equals(origen) && nodoGrafo.getNodo() != null && nodoGrafo.getDestino().equals(destino)){
+                /*else if((!nodoGrafo.getNodo().getNodos().isEmpty()) && nodoGrafo.getOrigen().equals(origen) && nodoGrafo.getNodo() != null && nodoGrafo.getDestino().equals(destino)){
                     nodoGrafos.add(nodoGrafo);
                     listadoDeGrafos.add(nodoGrafos);
                     for (List<NodoGrafo> nodoGrafo1 : listadoDeGrafos) {
@@ -527,12 +517,75 @@ public class UI extends javax.swing.JFrame {
                         }
                     enlistar(listadoDeGrafos, nodoGrafos, nodoGrafo.getNodo(), origen,destino);
                     
-                } 
+                } */
             }
+            for (NodoGrafo nodoGrafo : grafo.getNodos()) {
+            System.out.println("lista recortada" + listaRecortada.size());
+            for (int i = 0; i < listaRecortada.size(); i++) {
+                    for (NodoGrafo nodo : listaRecortada.get(i).getNodos() ) {
+                        valor = true;
+                        if(nodo.getDestino().equals(listaRecortada.get(i).getValor()) && !nodo.getDestino().equals(listaRecortada.get(0).getValor()) ){
+                             if (!nodoGrafos.contains(nodoGrafo)) {
+                                valor = false;
+                           
+                                }
+                                if (valor) {
+                                     nodoGrafos.add(nodoGrafo);
+                                }
+                            if (!nodo.getOrigen().equals(listaRecortada.get(0).getValor())) {
+                                almacenaRuta(nodoGrafos);
+                            }
+                        }
+                        else if(!nodo.getOrigen().equals(listaRecortada.get(i).getValor()) && nodo.getDestino().equals(listaRecortada.get(0).getValor())){
+                          if (!nodoGrafos.contains(nodo)) {
+                            nodoGrafos.add(nodo);
+                           }
+                       }
+                    }
+                    listadoDeGrafos.add(nodoGrafos);
+
+            }
+
+
+            for (NodoGrafo nodo : nodoGrafos) {
+                        System.out.println(nodo.toString());
+                   }
+
+
+           }
+            return nodoGrafos;
         }
         
+        return null;
     }
     
+     public static void almacenaRuta(List<NodoGrafo> nodoGrafos){
+           boolean valor;
+         for (Grafo grafo : listaRecortada) {
+             for (NodoGrafo nodo : grafo.getNodos()) {
+               valor = true;
+                 if(nodo.getDestino().equals(grafo.getValor()) && !nodo.getDestino().equals(listaRecortada.get(0).getValor())){
+                          if (!nodoGrafos.contains(nodo)) {
+                                valor = false;
+                           
+                                }
+                                if (valor) {
+                                     nodoGrafos.add(nodo);
+                                }
+                         if (!nodo.getOrigen().equals(listaRecortada.get(0).getValor())) {
+                             almacenaRuta(nodoGrafos);
+                         }
+                     }
+                 else if(!nodo.getOrigen().equals(grafo.getValor()) && nodo.getDestino().equals(listaRecortada.get(0).getValor())){
+                     if (!nodoGrafos.contains(nodo)) {
+                         nodoGrafos.add(nodo);
+                     }
+                        
+                    }
+             }
+         }
+     }
+     
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
         System.out.println("Seleccionando Boton carga");
         String selectedValue2= (String) jComboBox2.getSelectedItem();
@@ -545,8 +598,7 @@ public class UI extends javax.swing.JFrame {
                 List<List<NodoGrafo>> listadoGrafos = new ArrayList<>();
                 List<NodoGrafo> nodoGrafos = new ArrayList<>();
                 nodoGrafos.clear();
-                
-                enlistar(listadoGrafos,nodoGrafos, grafo, selectedValue1 ,selectedValue2);
+                nodoGrafos =new ArrayList<>(enlistar(listadoGrafos, grafo, selectedValue1 ,selectedValue2));
                
                 for (NodoGrafo grafos : nodoGrafos) {
                     total = Calculo.calcularRapidezCaminando(grafos.getDistancia(), grafos.getTiempo_aproximado_a_pie());
@@ -569,10 +621,18 @@ public class UI extends javax.swing.JFrame {
                
                
                // arbolB.setId(total);
-               
-                
+                int t = 3;
+                ArbolB arbolB = new ArbolB(t);
+                int i = 0;
+                for (List<NodoGrafo> nocoGrafo : listadoGrafos) {
+                    arbolB.insertar(i,nocoGrafo);
+                    i++;
+                }
+                arbolB.showBTree();
             }
         }
+        
+        
     }//GEN-LAST:event_jButton2MouseClicked
 
     private void jComboBox1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox1ItemStateChanged
@@ -614,6 +674,61 @@ public class UI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
+    private void jScrollPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jScrollPane1MouseClicked
+         if (evt.getButton() == MouseEvent.BUTTON1) {
+            zoomIn();
+            
+        } else if (evt.getButton() == MouseEvent.BUTTON3) {
+            zoomOut();
+        }
+    }//GEN-LAST:event_jScrollPane1MouseClicked
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+            File archivo = new File("src/main/java/Graficar/graficaGenerada.png");
+            archivo.delete();
+    }//GEN-LAST:event_formWindowClosed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+       File archivo = new File("src/main/java/Graficar/graficaGenerada.png");
+            archivo.delete();
+    }//GEN-LAST:event_formWindowClosing
+
+    
+private void zoomIn() {
+    ImageIcon icon = new ImageIcon("src/main/java/Graficar/graficaGenerada.png");
+    Image image = icon.getImage();
+    
+    double scaleFactor = 1.1;
+    
+    int newWidth = (int) (image.getWidth(null) * scaleFactor);
+    int newHeight = (int) (image.getHeight(null) * scaleFactor);
+    
+    Image zoomedInImage = image.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+    
+    ImageIcon zoomedInIcon = new ImageIcon(zoomedInImage);
+    
+    jLabel7.setIcon(zoomedInIcon);
+}
+
+private void zoomOut() {
+    ImageIcon icon = (ImageIcon) jLabel7.getIcon();
+    Image image = icon.getImage();
+    
+    double scaleFactor = 0.9;
+    
+    int newWidth = (int) (image.getWidth(null) * scaleFactor);
+    int newHeight = (int) (image.getHeight(null) * scaleFactor);
+    
+    Image zoomedOutImage = image.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+    
+    ImageIcon zoomedOutIcon = new ImageIcon(zoomedOutImage);
+    
+    jLabel7.setIcon(zoomedOutIcon);
+}
+
+
+
+    
     /**
      * @param args the command line arguments
      */

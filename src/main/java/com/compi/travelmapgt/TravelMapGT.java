@@ -4,12 +4,7 @@
 
 package com.compi.travelmapgt;
 
-import ArbolB.ArbolB;
-import Grafo.Grafo;
-import Grafo.NodoGrafo;
 import UI.UI;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
@@ -21,6 +16,7 @@ public class TravelMapGT {
         
         UI ui = new UI();
         ui.setVisible(true);
+        
         /*
   List<Grafo> grafos;
        grafos = new ArrayList<>();
